@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""
+    vm-postinstall 0.2:  A Python 3 script for configuring Ubuntu 18.04 VMs.
+                        Edit hostname, aptitude update, safe-upgrade.
+Dayo Ntwari 190813
+
+"""
+import os
+import socket
+import subprocess
+
+def setnewhostname(runChoice, printError):
+    """ Set hostname """
+    if runChoice:
+        try:
+            newHostname = input("New hostname: ")
+            subprocess.call(["sudo", "hostnamectl", "set-hostname", newHostname])
+            return True
+        except Exception as exc:
+            if printError:
+                printErrorMsg()
+            return False
+
+def sau(runChoice, printError):
+    """ Run aptitude update. """
+    if runChoice:
+        try:
+            subprocess.check_call("sudo aptitude update", shell=True)
+            print("aptitude update WORKED")
+            return True
+        except Exception as exc:
+            if printError:
+                printErrorMsg()
+            return False
+
+def sasu(runChoice, printError):
+    """ Run aptitude safe-upgrade. """
+    if runChoice:
+        try:
+            subprocess.check_call("sudo aptitude safe-upgrade", shell=True)
+            print("aptitude safe-upgrade WORKED")
+            return True
+        except Exception as exc:
+            if printError:
+                printErrorMsg()
+            return False
+
+def aptAutoRemove(runChoice, printError):
+    """ Run apt-get autoremove. """
+    if runChoice:
+        try:
+            subprocess.check_call("sudo apt-get autoremove", shell=True)
+            return True
+        except Exception as exc:
+            if printError:
+                printErrorMsg()
+            return False
+
+def aptAutoClean(runChoice, printError):
+    """ Run apt-get autoclean. """
+    if runChoice:
+        try:
+            subprocess.check_call("sudo apt-get autoremove", shell=True)
+            return True
+        except Exception as exc:
+            if printError:
+                printErrorMsg()
+            return False
+
+def printErrorMsg():
+    """ Print the error message. """
+    print("!!!ERROR running command!!!")
+
+def main():
+
+    menuChoice = 0
+    while menuChoice != 8:
+        runChoice = True
+        printError = True
+        print("\nPOST-INSTALLATION MENU")
+        print("==========================")
+        print("1. Set hostname")
+        print("2. sau")
+        print("3. sasu")
+        print("4. autoremove")
+        print("5. autoclean")
+        print("6. Reboot")
+        print("7. Quit\n")
+        menuChoice = int(input("Choose a task: "))
+        
+        if menuChoice == 1:
+            # Change hostname
+            setnewhostname(runChoice, printError)
+        elif menuChoice == 2:
+            # sau
+            sau(runChoice, printError)
+        elif menuChoice == 3:
+            # sasu
+            sasu(runChoice, printError)
+        elif menuChoice == 4:
+            # autoremove
+            aptAutoRemove(runChoice, printError)
+        elif menuChoice == 5:
+            # autoclean
+            aptAutoClean(runChoice, printError)
+        elif menuChoice == 6:
+            # Reboot
+            os.system('sudo /sbin/shutdown -r now')
+        elif menuChoice == 7:
+            # Quit
+            print("Quitting..")
+            break
+
+if __name__ == "__main__":
+    main()
